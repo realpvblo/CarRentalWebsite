@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+     <!-- Bootstrap CSS -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- Link to CSS -->
     <link rel="stylesheet" href="style.css">
     <!-- Box Icons -->
@@ -60,18 +63,26 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"
 
               <!-- Email input -->
               <div class="form-outline mb-4">
-                <input type="email" id="form3Example3" class="form-control" />
+                <input id="emailInp" type="email" id="form3Example3" class="form-control" />
                 <label class="form-label" for="form3Example3">Email</label>
               </div>
 
               <!-- Password input -->
               <div class="form-outline mb-4">
-                <input type="password" id="form3Example4" class="form-control" />
+                <input id="passInp" type="password" id="form3Example4" class="form-control" />
                 <label class="form-label" for="form3Example4">Hasło</label>
               </div>
 
+                <!-- Checkbox -->
+              <div class="form-check d-flex justify-content-center mb-4">
+                <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
+                <label class="form-check-label" for="customSwitch1">
+                  Nie wylogowywuj mnie
+                </label>
+              </div>
+
               <!-- Submit button -->
-              <button type="submit" class="btn btn-primary btn-block mb-4">
+              <button id="sub_btn" type="submit" class="btn btn-primary btn-block mb-4">
                 Zaloguj
               </button>
 
@@ -90,5 +101,85 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.2.0/mdb.min.js"
 </section>
 <!-- Section: Design Block -->
 
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCz1emWjKj_hU2YLoKvqnEZ8tJzlxzD_Sg",
+      authDomain: "carrentarwebsite.firebaseapp.com",
+      databaseURL: "https://carrentarwebsite-default-rtdb.firebaseio.com",
+      projectId: "carrentarwebsite",
+      storageBucket: "carrentarwebsite.appspot.com",
+      messagingSenderId: "506757671868",
+      appId: "1:506757671868:web:bc763657b337909c7a59b9"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+
+    import { getDatabase, ref, set, child, get}
+    from "https://www.gstatic.com/firebasejs/9.8.3/firebase-database.js";
+
+    const db = getDatabase();
+
+    // REFERENCES
+
+    const email = document.getElementById('emailInp');
+    const pass = document.getElementById('passInp');
+    const submit = document.getElementById('sub_btn');
+
+    // AUTHENTICATION PROCESS
+
+    function AuthenticateUser(){
+        const dbref = ref(db);
+
+        get(child(dbref, "UsersList/"+ user.value)).then((snapshot)=>{
+        if(snapshot.exists()){
+            if(pass.value == pass.value){
+                login();
+            }
+            else{
+                alert("uzytkownik nie istnieje")
+            }
+          
+        }
+        else{
+          alert("Email lub haslo nieprawidlowe")
+        }
+      });
+    }
+
+    // LOGIN
+
+    function login(email){
+        let keepLoggedIn = document.getElementById('customSwitch1').checked;
+
+        if(!keepLoggedIn){
+            sessionStorage.setItem('email', JSON.stringify(email));
+            window.location="index.html";
+        }
+        else{
+            localStorage.setItem('keepLoggedIn', 'yes')
+            localStorage.setItem('email', JSON.stringify(email));
+            window.location="index.html";
+        }
+    }
+
+        // ASSIGN EVENTS
+
+        submit.addEventListener('click', AuthenticateUser);
+
+  </script>
+
+<!-- Our script must be loaded after firebase references -->
+<script src="main.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
+
 </html>

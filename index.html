@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Myjnia Samochodowa</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+     <!-- Bootstrap CSS -->
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- Link to CSS -->
     <link rel="stylesheet" href="style.css">
     <!-- Box Icons -->
@@ -13,7 +16,7 @@
 </head>
 <body>
     <!-- Header -->
-    <header>
+    <!-- <header>
         <a href="#" class="logo"><img src="img/logoCarWash.png" alt=""></a>
     
         <div class="bx bx-menu" id="menu-icon"></div>
@@ -30,7 +33,49 @@
             <a href="login.html" class="sign-in" id="myBtn">Zaloguj</a>
 
         </div>
-    </header>
+        
+    </header> -->
+
+
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="index.html">
+            <img src="img/logoCarWash.png" alt="" width="30" height="24">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#glowna">Główna</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#jakdzialamy">Jak Działamy</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#uslugi">Usługi</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#efekty">Efekty</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#onas">O Nas</a>
+              </li>
+            </ul>
+            <form class="d-flex">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                      <a id="userlink" class="nav-link active" href="login.html">Username</a>
+                    </li>
+                    <li class="nav-item">
+                      <a id="singoutlink" class="nav-link active" href="register.html">Wyloguj</a>
+                    </li>
+                  </ul>
+            </form>
+          </div>
+        </div>
+      </nav>
  
     <!-- Główna -->
     <section class="glowna" id="glowna">
@@ -154,7 +199,97 @@
         </div>
     </section>
 
-    <!-- JS -->
-    <script src="main.js"></script>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.3/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyCz1emWjKj_hU2YLoKvqnEZ8tJzlxzD_Sg",
+          authDomain: "carrentarwebsite.firebaseapp.com",
+          databaseURL: "https://carrentarwebsite-default-rtdb.firebaseio.com",
+          projectId: "carrentarwebsite",
+          storageBucket: "carrentarwebsite.appspot.com",
+          messagingSenderId: "506757671868",
+          appId: "1:506757671868:web:bc763657b337909c7a59b9"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        import { getDatabase, ref, set, child, get}
+            from "https://www.gstatic.com/firebasejs/9.8.3/firebase-database.js";
+
+    const db = getDatabase();
+      </script>
+
+    <!-- Our script must be loaded after firebase references -->
+<script src="main.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<script>
+
+// REFERENCES
+
+    let userlink = document.getElementById('userlink');
+    let singoutlink = document.getElementById('singoutlink');
+    var currentuser = null;
+
+    // FUNCTIONS
+
+    function getUsername(){
+        let keepLoggedIn = localStorage.getItem("keepLoggedIn");
+
+        if(keepLoggedIn == "yes"){
+            currentuser = JSON.pars(localStorage.getItem('user'));
+        }
+        else{
+            currentuser = JSON.pars(sessionStorage.getItem('user'));
+        }
+    }
+
+    function Signout(){
+        sessionStorage.removeItem('user');
+        localStorage.removeItem('user');
+        localStorage.removeItem('keepLoggedIn');
+        window.location = "index.html";
+    }
+
+    // WINDOW LOADS
+
+    window.onload = function(){
+        getUsername();
+        if(currentuser = null){
+            userlink.innerText = "Zarejestruj się";
+            userlink.classList.replace("nav-link", "btn");
+            userlink.classList.add("btn-primary");
+            user.href = "register.html";
+
+            singoutlink.innerText = "Zaloguj";
+            singoutlink.classList.replace("nav-link", "btn");
+            singoutlink.classList.add("btn-success");
+            singoutlink.href = "login.html";
+        }
+
+        else{
+            userlink.innerText = currentuser.name;
+            userlink.classList.replace("nav-link", "btn");
+            userlink.classList.remove("btn-primary");
+            user.href = "#";
+
+            singoutlink.innerText = "Wyloguj";
+            singoutlink.classList.replace("nav-link", "btn");
+            singoutlink.classList.remove("btn-success");
+            singoutlink.href = "javascript:Signout()";
+        }
+    }
+</script>
+
 </body>
+
 </html>
+
